@@ -720,7 +720,7 @@
       <span class="lg lg-req">专业必修</span>
       <span class="lg lg-elec">专业选修</span>
     </div>
-    <button class="pdf-btn no-print" id="btn-export-pdf" type="button" title="导出为 PDF：打开打印窗口后，把「目标 / 打印机」选为「另存为 PDF」即可保存">⤓ 导出 PDF</button>
+    <button class="pdf-btn no-print" id="btn-export-pdf" type="button" title="导出为 PDF：打开打印窗口后，把「目标 / 打印机」选为「另存为 PDF」即可保存"，如果遇到浏览器无法打印，请手动截图保存！>⤓ 导出 PDF</button>
   </div>
   <div class="schedule-body" id="schedule-body">
     <table class="schedule-table" id="schedule-table"></table>
@@ -1623,7 +1623,7 @@ function exportCurrentHTML(){
 $('btn-export-html').addEventListener('click', exportCurrentHTML);
 if (IS_OFFLINE) {
   $('btn-reimport').remove();
-  document.querySelector('.page-sub').textContent = '离线规划 · 修改后请再次导出 HTML 保存';
+  document.querySelector('.page-sub').textContent = '选课规划 · 修改后请再次导出 HTML 保存';
 }
 FILTERS.forEach(f => $(f.btn)?.setAttribute('aria-pressed', String(FILTER_ON[f.key])));
 
