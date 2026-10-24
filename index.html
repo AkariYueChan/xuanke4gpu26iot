@@ -235,7 +235,7 @@
     border-radius:16px;padding:14px 16px 18px;box-shadow:var(--shadow);
   }
   .pool-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px;}
-  .pool-head h2{font-size:14.5px;margin:0;font-weight:600;}
+  .pool-head h2{font-size:15.5px;margin:0;font-weight:600;}
   .pool-head .count{font-size:12px;color:var(--muted);}
   .pool-desc{margin:0 0 12px;font-size:12.5px;color:var(--muted);line-height:1.7;}
   .pool-desc b{color:var(--text);}
@@ -466,7 +466,7 @@
 
     .pool{padding:12px 12px 16px;border-radius:14px;}
     .pool-head{gap:8px;}
-    .pool-head h2{font-size:14px;}
+    .pool-head h2{font-size:15px;}
     .pool-desc{font-size:12px;}
     .pool-tools{margin-bottom:12px;}
     .opt-chip{padding:10px 16px;font-size:13px;}   /* 手机上加大点按区域 */
@@ -535,6 +535,59 @@
   .card.custom .course-delete{position:absolute;right:5px;top:5px;z-index:2;width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:#fff;color:#64748b;font-size:19px;line-height:1;cursor:pointer;}
   .course-delete:hover{color:var(--bad);background:var(--bad-soft);border-color:var(--bad-line);}
   @media(max-width:650px){.edit-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.edit-panel{padding:14px;}}
+
+  /* 达标弹窗：右上角关闭，底部整行生成按钮 */
+  #modal-elec .modal{position:relative;padding-top:54px;}
+  #modal-elec .modal-close-square{
+    position:absolute;top:12px;right:12px;width:32px;height:32px;padding:0;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid #dc2626;border-radius:7px;background:#dc2626;color:#fff;
+    font-family:inherit;font-size:24px;line-height:1;cursor:pointer;transition:.15s;
+  }
+  #modal-elec .modal-close-square:hover{background:#b91c1c;border-color:#b91c1c;}
+  #modal-elec .modal-close-square:active{transform:scale(.95);}
+  #modal-elec .modal-actions{display:block;}
+  #modal-schedule{display:block;width:100%;background:#16a34a;border-color:#16a34a;color:#fff;font-weight:600;}
+  #modal-schedule:hover{background:#15803d;border-color:#15803d;}
+  #modal-elec button:focus-visible{outline:3px solid #93c5fd;outline-offset:3px;}
+
+  #btn-gen-bottom{background:#dc2626;border-color:#dc2626;}
+  #btn-gen-bottom:hover{background:#b91c1c;border-color:#b91c1c;}
+  #btn-gen-bottom.ready{background:#16a34a;border-color:#16a34a;}
+  #btn-gen-bottom.ready:hover{background:#15803d;border-color:#15803d;}
+
+  #course-form input.field-invalid{border-color:#dc2626;background:#fef2f2;outline-color:#fca5a5;}
+  #course-form input.field-valid{border-color:#16a34a;background:#f0fdf4;outline-color:#86efac;}
+  #course-form .course-options .choice-list{border:1px solid transparent;border-radius:9px;padding:5px 8px;}
+  #course-form .course-options.field-invalid .choice-list{border-color:#dc2626;background:#fef2f2;}
+  #course-form .course-options.field-valid .choice-list{border-color:#16a34a;background:#f0fdf4;}
+  #course-form .field-error{display:block;color:#b91c1c;font-size:12px;margin-top:5px;}
+  #course-form .field-error[hidden]{display:none;}
+  .page-sub{font-size:20px;font-weight:800;}
+  #btn-export-html{background:#2563eb;border-color:#2563eb;color:#fff;}
+  #btn-export-html:hover{background:#1d4ed8;border-color:#1d4ed8;}
+
+  .sticky-progress{position:fixed;top:0;left:0;right:0;z-index:119;height:36px;padding:0 16px;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(15,23,42,.07);display:flex;align-items:center;gap:12px;opacity:0;visibility:hidden;transform:translateY(-100%);pointer-events:none;transition:opacity .22s,transform .22s,visibility .22s;}
+  .sticky-progress.show{opacity:1;visibility:visible;transform:none;}
+  .sticky-progress-label,.sticky-progress-value{font-size:12px;white-space:nowrap;color:var(--muted);}
+  .sticky-progress-label{font-weight:600;color:var(--text);}
+  .sticky-progress .bar{flex:1;min-width:0;height:6px;}
+  @media(max-width:480px){.sticky-progress{height:32px;padding:0 10px;gap:8px;}.sticky-progress-label,.sticky-progress-value{font-size:11px;}}
+  @media print{.sticky-progress{display:none!important;}}
+  #course-add-pool{background:#2563eb;border-color:#2563eb;}
+  #course-add-pool:hover{background:#1d4ed8;border-color:#1d4ed8;}
+
+  /* 电脑和手机统一：两个添加按钮并排，清除按钮独占下一行。 */
+    .course-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:stretch;}
+    .course-actions #course-add{grid-column:1;grid-row:1;}
+    .course-actions #course-add-pool{grid-column:2;grid-row:1;}
+    .course-actions #course-clear{grid-column:1/-1;grid-row:2;}
+    .course-actions > button{width:100%;min-width:0;min-height:44px;margin:0;padding:11px 8px;font-size:13px;line-height:1.5;white-space:normal;box-shadow:none;}
+    .course-actions .edit-status{grid-column:1/-1;min-width:0;overflow-wrap:anywhere;}
+    .course-actions #term-help{grid-row:3;}
+    .course-actions #course-status{grid-row:4;}
+    .course-actions #course-status:empty{display:none;}
+  #target-form input.target-invalid{border-color:#dc2626;background:#fef2f2;outline-color:#fca5a5;color:#b91c1c;}
 </style>
 </head>
 <body>
@@ -544,7 +597,7 @@
   <header class="page-head">
     <div class="page-head-text">
       <h1 class="page-title" id="page-title">物联网应用技术（中外合办）</h1>
-      <p class="page-sub">选课学分规划</p>
+      <p class="page-sub">选课规划表</p>
     </div>
     <a class="gh-btn" id="btn-github" href="https://github.com/AkariYueChan/EnoughPoints" target="_blank" rel="noopener noreferrer" title="在 GitHub 上查看这个项目（新标签页打开）">
       <svg class="gh-logo" viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" focusable="false">
@@ -570,12 +623,12 @@
   <section class="edit-panel" aria-labelledby="target-title">
     <div class="manual-head"><h2 id="target-title">设置目标学分</h2><button class="mini-btn" type="button" id="target-defaults">↺ 恢复初始目标</button></div>
     <p>默认沿用原方案：公共必修 49、公共选修 0、专业必修 74、专业选修 15 学分。修改后点击应用；各类别及总目标自动相加，四项均达标后可生成选课表。</p>
-    <form id="target-form"><div class="edit-grid"><label>公共基础课 · 必修学分<input id="target-public-req" type="number" min="0" max="100000" step="1" required></label><label>公共基础课 · 选修学分<input id="target-public-elec" type="number" min="0" max="100000" step="1" required></label><label>专业课 · 必修学分<input id="target-major-req" type="number" min="0" max="100000" step="1" required></label><label>专业课 · 选修学分<input id="target-major-elec" type="number" min="0" max="100000" step="1" required></label></div>
+    <form id="target-form" novalidate><div class="edit-grid"><label>公共基础课 · 必修学分<input id="target-public-req" type="number" min="0" max="100000" step="0.5" aria-describedby="target-summary-help" required></label><label>公共基础课 · 选修学分<input id="target-public-elec" type="number" min="0" max="100000" step="0.5" aria-describedby="target-summary-help" required></label><label>专业课 · 必修学分<input id="target-major-req" type="number" min="0" max="100000" step="0.5" aria-describedby="target-summary-help" required></label><label>专业课 · 选修学分<input id="target-major-elec" type="number" min="0" max="100000" step="0.5" aria-describedby="target-summary-help" required></label></div>
     <div class="edit-grid target-summary" aria-live="polite">
       <label>总学分（自动合计）<input id="target-total" type="text" readonly aria-describedby="target-summary-help"></label>
       <label>选修学分要求（自动合计）<input id="target-elective" type="text" readonly aria-describedby="target-summary-help"></label>
     </div>
-    <p id="target-summary-help" class="target-summary-help">目标学分仅限非负整数，课程卡片的小数学分按实际值累加。总学分 = 四项目标之和；选修学分要求 = 公共选修 + 专业选修。点击“应用目标”后生效，已选选修学分不足时不能生成选课表。</p>
+    <p id="target-summary-help" class="target-summary-help">目标学分须为 0–100000，以 0.5 为步长（如 0、0.5、1、1.5），课程卡片的小数学分按实际值累加。总学分 = 四项目标之和；选修学分要求 = 公共选修 + 专业选修。点击“应用目标”后生效，已选选修学分不足时不能生成选课表。</p>
     <div class="edit-actions"><button class="gen-btn" type="submit">应用目标</button><span id="target-status" class="edit-status" role="status"></span></div></form>
   </section>
   <div class="topbar">
@@ -646,7 +699,7 @@
   <!-- 课程池 -->
   <section class="pool">
     <div class="pool-head">
-      <h2>待选课程池 · <span id="title-pool">专业课选修</span></h2>
+      <h2 id="title-pool">选课池</h2>
       <span class="count" id="pool-count">0 门课程</span>
     </div>
     <p class="pool-desc">已按学期先后排列；<b>点击或拖拽卡片即可选课</b>，跨学期的课程拆成多张卡。</p>
@@ -660,14 +713,14 @@
 
   <section class="edit-panel" aria-labelledby="add-title">
     <div class="manual-head"><h2 id="add-title">手动添加课程</h2><button id="course-reset-added" class="mini-btn empty" type="button" title="删除所有手动添加的课程，保留原有课程与目标学分" disabled>↺ 重置所有已添加课程</button></div>
-    <p>填写后点击“添加课程”，直接加入对应类别并计入学分。新增课程可点卡片右上角 × 删除；修改后请导出当前 HTML 保存。</p>
-    <form id="course-form"><div class="edit-grid">
-      <label>课程名称<input id="course-name" maxlength="120" required placeholder="请输入课程名称"></label>
-      <fieldset class="course-options"><legend>课程大类</legend><div class="choice-list"><label><input type="radio" name="course-cat" value="public" checked required>公共基础课</label><label><input type="radio" name="course-cat" value="major" required>专业课</label></div></fieldset>
-      <fieldset class="course-options"><legend>课程性质</legend><div class="choice-list"><label><input type="radio" name="course-type" value="选修" checked required>选修</label><label><input type="radio" name="course-type" value="必修" required>必修</label></div></fieldset>
-      <label>学分<input id="course-credit" type="number" min="0.5" max="100000" step="0.5" required placeholder="例如 1、1.5、2"></label>
-      <fieldset class="course-options term-options" aria-describedby="term-help"><legend>开设学期（可多选）</legend><div class="choice-list"><label><input type="checkbox" name="course-term" value="1" checked>第 1 学期</label><label><input type="checkbox" name="course-term" value="2">第 2 学期</label><label><input type="checkbox" name="course-term" value="3">第 3 学期</label><label><input type="checkbox" name="course-term" value="4">第 4 学期</label><label><input type="checkbox" name="course-term" value="5">第 5 学期</label><label><input type="checkbox" name="course-term" value="6">第 6 学期</label></div></fieldset>
-    </div><div class="edit-actions"><button id="course-add" class="gen-btn" type="button">添加课程</button><button id="course-clear" class="reset danger-outline" type="button" title="只清空当前表单，不影响已添加课程">删除当前填写</button><span id="term-help" class="edit-status">至少选择一个学期；跨学期的课程学分只计一次。</span><span id="course-status" class="edit-status" role="status"></span></div></form>
+    <p>填写后点击“直接添加课程”，直接加入对应类别并计入学分；点击“添加进选课池”则先存入待选课程池，选入后计分。新增课程可点卡片右上角 × 删除；修改后请导出当前 HTML 保存。</p>
+    <form id="course-form" novalidate><div class="edit-grid">
+      <label>课程名称<input id="course-name" maxlength="25" required placeholder="请输入课程名称（最多25字）" aria-describedby="course-name-error"><span id="course-name-error" class="field-error" hidden>请输入课程名称（1–25 字）。</span></label>
+      <fieldset id="course-cat-group" class="course-options"><legend>课程大类</legend><div class="choice-list"><label><input type="radio" name="course-cat" value="public" checked required>公共基础课</label><label><input type="radio" name="course-cat" value="major" required>专业课</label></div><span id="course-cat-error" class="field-error" hidden>请选择课程大类。</span></fieldset>
+      <fieldset id="course-type-group" class="course-options"><legend>课程性质</legend><div class="choice-list"><label><input type="radio" name="course-type" value="选修" checked required>选修</label><label><input type="radio" name="course-type" value="必修" required>必修</label></div><span id="course-type-error" class="field-error" hidden>请选择课程性质。</span></fieldset>
+      <label>学分<input id="course-credit" type="number" min="0.5" max="200" step="0.5" required placeholder="例如 1、1.5、2" aria-describedby="course-credit-error"><span id="course-credit-error" class="field-error" hidden>请输入 0.5–200 的学分，以 0.5 为步长。</span></label>
+      <fieldset id="course-term-group" class="course-options term-options" aria-describedby="term-help"><legend>开设学期（可多选）</legend><div class="choice-list"><label><input type="checkbox" name="course-term" value="1" checked>第 1 学期</label><label><input type="checkbox" name="course-term" value="2">第 2 学期</label><label><input type="checkbox" name="course-term" value="3">第 3 学期</label><label><input type="checkbox" name="course-term" value="4">第 4 学期</label><label><input type="checkbox" name="course-term" value="5">第 5 学期</label><label><input type="checkbox" name="course-term" value="6">第 6 学期</label></div><span id="course-term-error" class="field-error" hidden>请至少选择一个学期（1–6）。</span></fieldset>
+    </div><div class="edit-actions course-actions"><button id="course-add" class="gen-btn" type="button">直接添加课程</button><button id="course-clear" class="reset danger-outline" type="button" title="只清空当前表单，不影响已添加课程">清除当前填写</button><button id="course-add-pool" class="gen-btn" type="button">添加进选课池</button><span id="term-help" class="edit-status">至少选择一个学期；跨学期的课程学分只计一次。</span><span id="course-status" class="edit-status" role="status"></span></div></form>
   </section>
   <!-- 页面最底部：生成选课表 -->
   <div class="bottom-actions">
@@ -676,6 +729,11 @@
   </div>
 </div>
 
+<div id="sticky-progress" class="sticky-progress" aria-hidden="true">
+  <span class="sticky-progress-label">总进度</span>
+  <div class="bar" id="sticky-progress-bar" role="progressbar" aria-label="总学分进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+  <span id="sticky-progress-value" class="sticky-progress-value"></span>
+</div>
 <div id="toast"></div>
 
 <!-- 返回顶部 -->
@@ -684,12 +742,12 @@
 <!-- 选修学分达标提示框 -->
 <div class="modal-mask" id="modal-elec" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden="">
   <div class="modal">
+    <button class="modal-close-square" id="modal-close" type="button" aria-label="关闭达标提示" title="关闭">×</button>
     <div class="modal-icon" aria-hidden="true">🎉</div>
     <h3 class="modal-title" id="modal-title">您已选择足够的选修学分</h3>
     <p class="modal-text" id="modal-text"></p>
     <div class="modal-actions">
       <button class="modal-btn" id="modal-schedule" type="button" title="按学期生成一张选课表">生成选课表</button>
-      <button class="modal-btn primary" id="modal-close" type="button">关闭</button>
     </div>
   </div>
 </div>
@@ -720,7 +778,7 @@
       <span class="lg lg-req">专业必修</span>
       <span class="lg lg-elec">专业选修</span>
     </div>
-    <button class="pdf-btn no-print" id="btn-export-pdf" type="button" title="导出为 PDF：打开打印窗口后，把「目标 / 打印机」选为「另存为 PDF」即可保存"，如果遇到浏览器无法打印，请手动截图保存！>⤓ 导出 PDF</button>
+    <button class="pdf-btn no-print" id="btn-export-pdf" type="button" title="导出为 PDF：打开打印窗口后，把「目标 / 打印机」选为「另存为 PDF」即可保存">⤓ 导出 PDF</button>
   </div>
   <div class="schedule-body" id="schedule-body">
     <table class="schedule-table" id="schedule-table"></table>
@@ -876,17 +934,18 @@ FILTERS.forEach(f => FILTER_ON[f.key] = false);
 const isFilteredOut = c => FILTERS.some(f => FILTER_ON[f.key] && f.match(c));
 
 /* 必修课 = 固定课：开局直接排进所属类别框，且不可拖动 / 不可移出 */
-const isLocked = c => c.type === '必修';
+const isLocked = c => c.type === '必修' && PLACE[c.id] !== 'pool';
 
 function resetAll(){
-  COURSES.forEach(c => PLACE[c.id] = isLocked(c) ? c.cat : 'pool');
+  COURSES.forEach(c => PLACE[c.id] = c.type === '必修' && !c.poolAdded ? c.cat : 'pool');
   prevAllOk = false;
   prevElecOk = false;
 }
 resetAll();
 if (INJECTED?.offline) {
   COURSES.forEach(c => {
-    if (!isLocked(c) && INJECTED.place?.[c.id] === c.cat) PLACE[c.id] = c.cat;
+    if (c.custom && INJECTED.place?.[c.id] === 'pool') PLACE[c.id] = 'pool';
+    else if (INJECTED.place?.[c.id] === c.cat) PLACE[c.id] = c.cat;
   });
   FILTERS.forEach(f => FILTER_ON[f.key] = INJECTED.filters?.[f.key] === true);
 }
@@ -929,7 +988,7 @@ function cardHTML(c, slot){
     : `学期 ${c.term}`;
   const tip = (locked
       ? `${c.name}（${c.attr} · 必修 · ${c.credit} 学分）— 必修课已自动排入，不可移动`
-      : `${c.name}（${c.attr} · 选修 · ${c.credit} 学分）— 拖进专业课框即可选课`)
+      : `${c.name}（${c.attr} · ${c.type} · ${c.credit} 学分）— 点击或拖进所属类别框即可选课`)
     + (grade ? `；开设时间：${grade}（第 ${slot.term} 学期）` : '')
     + (multi ? `；本课程开设于第 ${slot.terms.join('、')} 学期，已按学期拆成 ${slot.count} 张卡（学分只计一次）` : '');
 
@@ -959,7 +1018,7 @@ function expandByTerm(list){
       .filter(t => !isNaN(t))
       .sort((a, b) => a - b);
     const use = terms.length ? terms : [0];
-    const rank = isLocked(c) ? 0 : 1;      // 必修 0、选修 1
+    const rank = c.type === '必修' ? 0 : 1;      // 必修 0、选修 1
     use.forEach(t => out.push({ c, term: t, count: use.length, terms: use, rank, order: i }));
   });
   return out.sort((a, b) => (a.term - b.term) || (a.rank - b.rank) || ((a.c.cat === 'major') - (b.c.cat === 'major')) || (a.order - b.order));
@@ -1019,11 +1078,11 @@ function render(){
   const poolAll = COURSES.filter(c => PLACE[c.id] === 'pool');
   /* 筛选器只作用于可选课程（选修），必修课必须保留否则学分永远修不满 */
   const activeFilters = FILTERS.filter(f => FILTER_ON[f.key]);
-  const poolList = activeFilters.length ? poolAll.filter(c => !isFilteredOut(c)) : poolAll;
+  const poolList = activeFilters.length ? poolAll.filter(c => c.type === '必修' || !isFilteredOut(c)) : poolAll;
   const hiddenByFilter = poolAll.length - poolList.length;
   /* 各筛选器分别排除了几门（文案更清楚，例如「全英文 4 + 企业 4」） */
   const hiddenBreak = activeFilters
-    .map(f => ({ label: f.label, n: poolAll.filter(f.match).length }))
+    .map(f => ({ label: f.label, n: poolAll.filter(c=>c.type==='选修'&&f.match(c)).length }))
     .filter(x => x.n > 0)
     .map(x => `${x.label} ${x.n}`)
     .join(' + ');
@@ -1088,12 +1147,21 @@ function render(){
   $('p-credit').textContent=fmt(s.total);
   $('p-bar').classList.toggle('allok',allOk);
   $('p-bar').firstElementChild.style.width=percent(s.total,GOAL.total);
+  const stickyBar=$('sticky-progress-bar');
+  const totalPercent=percent(s.total,GOAL.total);
+  stickyBar.firstElementChild.style.width=totalPercent;
+  stickyBar.classList.toggle('allok',allOk);
+  stickyBar.setAttribute('aria-valuenow',String(Math.round(parseFloat(totalPercent))));
+  stickyBar.setAttribute('aria-valuetext',`${fmt(s.total)} / ${targetText(GOAL.total)} 学分；${allOk?'全部目标已达标':'尚有目标未达标'}`);
+  $('sticky-progress-value').textContent=`${fmt(s.total)} / ${targetText(GOAL.total)} 学分`;
+
   $('done-banner').classList.toggle('show',allOk);
   if(allOk&&!prevAllOk)toast('已达到全部已设置的学分目标');
   prevAllOk=allOk;
   $('bottom-hint').textContent=s.status==='unknown'?'尚未设置学分目标，可以生成标注“目标未填写”的规划草案':
     allOk?'已达到全部已设置目标，可以生成选课表':remainingText(s)+'；满足后才能生成选课表';
   $('bottom-hint').classList.toggle('ok',allOk);
+  $('btn-gen-bottom').classList.toggle('ready',allOk);
 
   bindCardEvents();
   revealLastMoved();
@@ -1327,6 +1395,8 @@ function setupToTop(){
       if (y <= 0) show = false;             // 回到顶部一定隐藏
     }
     btn.classList.toggle('show', show);
+    $('sticky-progress').classList.toggle('show',show);
+    $('sticky-progress').setAttribute('aria-hidden',String(!show));
   }
 
   btn.addEventListener('click', () => {
@@ -1460,7 +1530,7 @@ const SCHEDULE_PRINT_CSS = `
   @page{ size: A4 landscape; margin: 10mm; }
   html, body{ background:#fff !important; }
   /* 主页面、浮动按钮、提示条、弹窗全部不打印 */
-  .wrap, #toast, .to-top, .modal-mask{ display:none !important; }
+  .wrap, #toast, .to-top, .sticky-progress, .modal-mask{ display:none !important; }
   .schedule{
     position:static !important; inset:auto !important;
     display:block !important; opacity:1 !important; transform:none !important;
@@ -1579,7 +1649,7 @@ function applyGoal(){
   $('page-title').textContent=PLAN_NAME;
   $('title-public').textContent=p.title;
   $('title-major').textContent=m.title;
-  $('title-pool').textContent='公共与专业选修';
+  $('title-pool').textContent='选课池';
   $('rule-pick-label').textContent='公共与专业选修课';
   $('rule-targets').textContent=`目标：总学分 ${targetText(GOAL.total)}；选修合计 ${targetText(GOAL.elective)}；公共基础课 ${targetText(p.target)}；专业课 ${targetText(m.target)}（空白目标不参与达标判断）`;
   $('goal-total').textContent=targetText(GOAL.total);
@@ -1623,7 +1693,6 @@ function exportCurrentHTML(){
 $('btn-export-html').addEventListener('click', exportCurrentHTML);
 if (IS_OFFLINE) {
   $('btn-reimport').remove();
-  document.querySelector('.page-sub').textContent = '选课规划 · 修改后请再次导出 HTML 保存';
 }
 FILTERS.forEach(f => $(f.btn)?.setAttribute('aria-pressed', String(FILTER_ON[f.key])));
 
@@ -1635,25 +1704,41 @@ if(INJECTED && !IS_OFFLINE) history.replaceState(null, '', '/planner');
 
 function setupEditors(){
   const keys=['public','major'];
+  function readTarget(cat,kind){
+    const raw=String($(`target-${cat}-${kind}`).value).trim(),n=Number(raw);
+    return raw!=='' && Number.isFinite(n) && n>=0 && n<=100000 && Number.isInteger(n*2) ? n : null;
+  }
+  function markTarget(cat,kind){
+    const input=$(`target-${cat}-${kind}`),valid=readTarget(cat,kind)!==null;
+    input.classList.toggle('target-invalid',!valid);
+    if(valid)input.removeAttribute('aria-invalid');else input.setAttribute('aria-invalid','true');
+    return valid;
+  }
   function updateTargetSummary(){
-    const read=(cat,kind)=>{
-      const raw=String($(`target-${cat}-${kind}`).value).trim(),n=Number(raw);
-      return raw && Number.isInteger(n) && n>=0 && n<=100000 ? n : null;
-    };
-    const req=keys.map(cat=>read(cat,'req')),elec=keys.map(cat=>read(cat,'elec'));
-    const show=values=>values.some(v=>v===null)?'请填写非负整数':fmt(values.reduce((sum,n)=>sum+n,0));
+    const req=keys.map(cat=>readTarget(cat,'req')),elec=keys.map(cat=>readTarget(cat,'elec'));
+    const show=values=>values.some(v=>v===null)?'请填写有效学分':fmt(values.reduce((sum,n)=>sum+n,0));
     $('target-total').value=show([...req,...elec]);
     $('target-elective').value=show(elec);
   }
   const syncInputs=()=>{
-    keys.forEach(cat=>['req','elec'].forEach(kind=>$(`target-${cat}-${kind}`).value=GOAL[cat][kind+'Target']));
+    keys.forEach(cat=>['req','elec'].forEach(kind=>{
+      const input=$(`target-${cat}-${kind}`);
+      input.value=GOAL[cat][kind+'Target'];
+      input.classList.remove('target-invalid');
+      input.removeAttribute('aria-invalid');
+    }));
     updateTargetSummary();
   };
-  keys.forEach(cat=>['req','elec'].forEach(kind=>$(`target-${cat}-${kind}`).addEventListener('input',()=>{
-    updateTargetSummary();
-    $('target-status').classList.remove('error');
-    $('target-status').textContent='目标已修改，点击“应用目标”后生效。';
-  })));
+  keys.forEach(cat=>['req','elec'].forEach(kind=>{
+    const validate=()=>{
+      markTarget(cat,kind);
+      updateTargetSummary();
+      const valid=keys.every(c=>['req','elec'].every(k=>readTarget(c,k)!==null));
+      $('target-status').classList.toggle('error',!valid);
+      $('target-status').textContent=valid?'目标已修改，点击“应用目标”后生效。':'目标学分须为 0–100000，且为 0.5 的倍数；请修正无效输入。';
+    };
+    for(const event of ['input','change','blur'])$(`target-${cat}-${kind}`).addEventListener(event,validate);
+  }));
   function applyTargets(values){
     keys.forEach(cat=>{
       GOAL[cat].reqTarget=values[cat].req;
@@ -1671,23 +1756,74 @@ function setupEditors(){
   $('target-form').addEventListener('submit',e=>{
     e.preventDefault();
     const values={};
+    let valid=true,firstInvalid=null;
     for(const cat of keys){
       values[cat]={};
       for(const kind of ['req','elec']){
-        const input=$(`target-${cat}-${kind}`), value=Number(input.value);
-        if(!input.value.trim() || !Number.isInteger(value) || value<0 || value>100000){
-          $('target-status').classList.add('error');$('target-status').textContent='目标学分必须是 0–100000 之间的整数，不接受小数。';return;
+        if(!markTarget(cat,kind)){
+          valid=false;
+          firstInvalid ||= $(`target-${cat}-${kind}`);
         }
-        values[cat][kind]=r1(value);
+        values[cat][kind]=readTarget(cat,kind);
       }
+    }
+    updateTargetSummary();
+    if(!valid){
+      $('target-status').classList.add('error');
+      $('target-status').textContent='请修正标红的目标学分：允许 0–100000，以 0.5 为步长。';
+      firstInvalid.focus();
+      return;
     }
     applyTargets(values);
   });
-  $('target-defaults').addEventListener('click',()=>applyTargets(INITIAL_TARGETS));
+  $('target-defaults').addEventListener('click',()=>{
+    applyTargets(INITIAL_TARGETS);
+    $('target-status').textContent='已恢复初始目标。';
+  });
+
+  const courseFields={name:$('course-name'),credit:$('course-credit'),cat:$('course-cat-group'),type:$('course-type-group'),term:$('course-term-group')};
+  function courseValidity(){
+    const name=$('course-name').value.trim(),raw=$('course-credit').value.trim(),credit=Number(raw);
+    const cat=document.querySelector('input[name="course-cat"]:checked')?.value;
+    const type=document.querySelector('input[name="course-type"]:checked')?.value;
+    const terms=Array.from(document.querySelectorAll('input[name="course-term"]:checked'),input=>Number(input.value));
+    return {name:name.length>0&&name.length<=25,
+      credit:raw!==''&&Number.isFinite(credit)&&credit>=0.5&&credit<=200&&Number.isInteger(credit*2),
+      cat:['public','major'].includes(cat),type:['必修','选修'].includes(type),
+      term:terms.length>0&&terms.every(t=>Number.isInteger(t)&&t>=1&&t<=6)};
+  }
+  function paintCourseField(key,valid){
+    const field=courseFields[key];
+    field.classList.toggle('field-invalid',!valid);
+    field.classList.toggle('field-valid',valid);
+    field.setAttribute('aria-invalid',String(!valid));
+    $('course-'+key+'-error').hidden=valid;
+  }
+  function resetCourseValidation(){
+    Object.entries(courseFields).forEach(([key,field])=>{
+      field.classList.remove('field-invalid','field-valid');
+      field.removeAttribute('aria-invalid');
+      $('course-'+key+'-error').hidden=true;
+    });
+  }
+  Object.entries(courseFields).forEach(([key,field])=>{
+    const validate=()=>{
+      const checks=courseValidity();
+      paintCourseField(key,checks[key]);
+      if($('course-status').classList.contains('error') && Object.values(checks).every(Boolean)){
+        $('course-status').classList.remove('error');
+        $('course-status').textContent='填写正确，点击“直接添加课程”即可添加。';
+      }
+    };
+    field.addEventListener('input',validate);
+    field.addEventListener('change',validate);
+    field.addEventListener('focusout',validate);
+  });
   $('course-form').addEventListener('submit',e=>e.preventDefault());
   $('course-clear').addEventListener('click',()=>{
     $('course-name').value='';
     $('course-credit').value='';
+    resetCourseValidation();
     document.querySelectorAll('#course-form input[type="radio"], #course-form input[type="checkbox"]').forEach(input=>input.checked=false);
     $('course-status').classList.remove('error');
     $('course-status').textContent='已清空当前填写，已添加的课程保持不变。';
@@ -1708,23 +1844,39 @@ function setupEditors(){
     $('course-status').classList.remove('error');
     $('course-status').textContent=count ? `已重置：删除 ${count} 门手动添加课程，当前填写内容已保留。` : '没有需要重置的手动添加课程。';
   });
-  $('course-add').addEventListener('click',()=>{
-    if(!$('course-form').reportValidity())return;
+  function addManualCourse(toPool){
+    const checks=courseValidity();
+    Object.keys(courseFields).forEach(key=>{paintCourseField(key,checks[key]);});
+    if(!Object.values(checks).every(Boolean)){
+      $('course-status').classList.add('error');
+      $('course-status').textContent='请修正标红的项目后再添加课程。';
+      const key=Object.keys(checks).find(key=>!checks[key]);
+      const field=courseFields[key];
+      (field.querySelector('input') || field).focus();
+      return;
+    }
     const name=$('course-name').value.trim(),credit=Number($('course-credit').value);
     const cat=document.querySelector('input[name="course-cat"]:checked')?.value;
     const type=document.querySelector('input[name="course-type"]:checked')?.value;
     const terms=Array.from(document.querySelectorAll('input[name="course-term"]:checked'),input=>Number(input.value)).sort((a,b)=>a-b);
     const status=$('course-status');
-    if(!name || !Number.isFinite(credit) || credit<=0 || credit>100000 || !Number.isInteger(credit*2) || !['public','major'].includes(cat) || !['必修','选修'].includes(type) || !terms.length || terms.some(t=>!Number.isInteger(t)||t<1||t>6)){
+    if(!name || !Number.isFinite(credit) || credit<=0 || credit>200 || !Number.isInteger(credit*2) || !['public','major'].includes(cat) || !['必修','选修'].includes(type) || !terms.length || terms.some(t=>!Number.isInteger(t)||t<1||t>6)){
       status.classList.add('error');status.textContent='请填写课程名称、正数学分（以 0.5 为步长），选择大类、性质及至少一个学期（1–6）。';return;
     }
-    const c={id:'manual-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10),name,credit:r1(credit),cat,type,term:terms.join(','),attr:'手动添加',custom:true};
-    COURSES.push(c);PLACE[c.id]=cat;
+    const c={id:'manual-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10),name,credit:r1(credit),cat,type,term:terms.join(','),attr:'手动添加',custom:true,poolAdded:toPool};
+    COURSES.push(c);PLACE[c.id]=toPool?'pool':cat;
+    // Explicit pool additions remain visible even when a matching filter was enabled.
+    if(toPool && type==='选修') FILTERS.forEach(f=>{
+      if(FILTER_ON[f.key] && f.match(c)){FILTER_ON[f.key]=false;$(f.btn).setAttribute('aria-pressed','false');}
+    });
     lastMovedId=null;render();
     $('course-name').value='';$('course-credit').value='';
-    status.classList.remove('error');status.textContent=`已添加《${name}》，计入${cat==='public'?'公共基础课':'专业课'}${type}。`;
-    toast(`已添加《${name}》`);
-  });
+    resetCourseValidation();
+    status.classList.remove('error');status.textContent=toPool?`已将《${name}》添加进选课池，选入后才计入学分。`:`已添加《${name}》，计入${cat==='public'?'公共基础课':'专业课'}${type}。`;
+    toast(toPool?`已加入选课池《${name}》`:`已添加《${name}》`);
+  }
+  $('course-add').addEventListener('click',()=>addManualCourse(false));
+  $('course-add-pool').addEventListener('click',()=>addManualCourse(true));
 }
 
 /* ================= 启动 ================= */
