@@ -279,6 +279,7 @@
     opacity:0;pointer-events:none;transition:.28s;z-index:99;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);max-width:80vw;
   }
   #toast.show{opacity:1;transform:translate(-50%,0);}
+  #toast.error{background:#991b1b;}
   .done-banner{
     display:none;margin-top:14px;padding:12px 18px;border-radius:12px;
     background:var(--ok-soft);border:1px solid var(--ok-line);color:#15803d;
@@ -613,6 +614,8 @@
     <span>规则：</span>
     <span>必修课已自动排入并锁定，只有<b id="rule-pick-label">专业课选修</b>需要你自己挑</span>
     <span class="dot"></span>
+    <span id="rule-elective-limit"></span>
+    <span class="dot"></span>
     <span id="rule-targets"></span>
     <span class="dot"></span>
     <span>框内卡片按<b>学期先后</b>排列，跨学期的课程会拆成多张卡（学分只计一次）</span>
@@ -734,7 +737,7 @@
   <div class="bar" id="sticky-progress-bar" role="progressbar" aria-label="总学分进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
   <span id="sticky-progress-value" class="sticky-progress-value"></span>
 </div>
-<div id="toast"></div>
+<div id="toast" role="status"></div>
 
 <!-- 返回顶部 -->
 <button class="to-top" id="btn-top" type="button" aria-label="返回网页顶部" title="返回顶部">↑</button>
@@ -915,6 +918,7 @@ const INITIAL_TARGETS = INJECTED?.initialTargets || {public:{req:49,elec:0},majo
 
 /* ================= 状态 ================= */
 const PLACE = {};              // id -> 'pool' | 'public' | 'major'
+const MAX_ELECTIVES_PER_TERM = 3;
 let suppressClick = false;
 let prevAllOk = false;
 let prevElecOk = false;        // 选修学分是否已达标（用于"刚达标就弹提示框"的上升沿判断）
@@ -1007,16 +1011,36 @@ function cardHTML(c, slot){
     </div>`;
 }
 
+function courseTerms(c){
+  const terms = String(c.term).split(',').map(t => parseInt(t.trim(), 10)).filter(t => t > 0);
+  return [...new Set(terms)].sort((a, b) => a - b);
+}
+
+// 传入待选课程时检查它涉及的学期；不传时检查当前方案（包括旧版离线存档）。
+function electiveLimitError(candidate){
+  if (candidate && candidate.type !== '选修') return '';
+  const counts = new Map();
+  for (const c of COURSES){
+    if (c.type !== '选修' || PLACE[c.id] !== c.cat) continue;
+    for (const term of courseTerms(c)) counts.set(term, (counts.get(term) || 0) + 1);
+  }
+  const conflicts = candidate
+    ? courseTerms(candidate).filter(t => counts.get(t) >= MAX_ELECTIVES_PER_TERM)
+    : [...counts.keys()].filter(t => counts.get(t) > MAX_ELECTIVES_PER_TERM).sort((a,b) => a-b);
+  if (!conflicts.length) return '';
+  const semesters = `第 ${conflicts.join('、')} 学期`;
+  return candidate
+    ? `${semesters}的选修课已满（每学期最多 ${MAX_ELECTIVES_PER_TERM} 门），无法选入《${candidate.name}》。`
+    : `${semesters}的选修课超过 ${MAX_ELECTIVES_PER_TERM} 门，请退课至每学期最多 ${MAX_ELECTIVES_PER_TERM} 门后再生成选课表。`;
+}
+
 /* 把课程列表展开成「一张卡 = 一个学期」，按学期升序排列；
    同学期先必修再选修；同性质内先公共基础课再专业课，同组保持原顺序。
    导入的 Excel 常常按课程编号排序，必修/选修是交错的，所以这里必须显式分组。 */
 function expandByTerm(list){
   const out = [];
   list.forEach((c, i) => {
-    const terms = String(c.term).split(',')
-      .map(t => parseInt(t.trim(), 10))
-      .filter(t => !isNaN(t))
-      .sort((a, b) => a - b);
+    const terms = courseTerms(c);
     const use = terms.length ? terms : [0];
     const rank = c.type === '必修' ? 0 : 1;      // 必修 0、选修 1
     use.forEach(t => out.push({ c, term: t, count: use.length, terms: use, rank, order: i }));
@@ -1133,7 +1157,8 @@ function render(){
 
   const electiveCheck=s.checks.find(c=>c.label==='选修学分（公共＋专业）');
   const elecOk=!!electiveCheck?.met;
-  if(elecOk&&!prevElecOk&&lastMovedId){
+  const limitError=electiveLimitError();
+  if(elecOk&&!prevElecOk&&lastMovedId&&!limitError){
     if(s.status==='met')openElecModal(s);else openWarnModal(s);
   }
   prevElecOk=elecOk;
@@ -1156,12 +1181,12 @@ function render(){
   $('sticky-progress-value').textContent=`${fmt(s.total)} / ${targetText(GOAL.total)} 学分`;
 
   $('done-banner').classList.toggle('show',allOk);
-  if(allOk&&!prevAllOk)toast('已达到全部已设置的学分目标');
+  if(allOk&&!prevAllOk&&!limitError)toast('已达到全部已设置的学分目标');
   prevAllOk=allOk;
-  $('bottom-hint').textContent=s.status==='unknown'?'尚未设置学分目标，可以生成标注“目标未填写”的规划草案':
-    allOk?'已达到全部已设置目标，可以生成选课表':remainingText(s)+'；满足后才能生成选课表';
-  $('bottom-hint').classList.toggle('ok',allOk);
-  $('btn-gen-bottom').classList.toggle('ready',allOk);
+  $('bottom-hint').textContent=limitError || (s.status==='unknown'?'尚未设置学分目标，可以生成标注“目标未填写”的规划草案':
+    allOk?'已达到全部已设置目标，可以生成选课表':remainingText(s)+'；满足后才能生成选课表');
+  $('bottom-hint').classList.toggle('ok',allOk&&!limitError);
+  $('btn-gen-bottom').classList.toggle('ready',allOk&&!limitError);
 
   bindCardEvents();
   revealLastMoved();
@@ -1189,6 +1214,15 @@ function renderZone(cat, list){
 }
 
 /* ================= 交互：拖拽 ================= */
+function selectCourse(course){
+  const error = electiveLimitError(course);
+  if (error){ toast(error, true); return; }
+  PLACE[course.id] = course.cat;
+  lastMovedId = course.id;
+  toast(`已选《${course.name}》+${course.credit} 学分`);
+  render();
+}
+
 function bindCardEvents(){
   document.querySelectorAll('.card').forEach(el => {
     const course = COURSES.find(c => c.id === el.dataset.id);
@@ -1228,12 +1262,11 @@ function bindCardEvents(){
       if (suppressClick) return;
       const id = el.dataset.id;
       if (PLACE[id] === 'pool'){
-        PLACE[id] = course.cat;                     // 点击 → 选课，放进所属类别
-        toast(`已选《${course.name}》+${course.credit} 学分`);
-      } else {
-        PLACE[id] = 'pool';                         // 点击 → 退课，退回课程池
-        toast(`已退课《${course.name}》-${course.credit} 学分`);
+        selectCourse(course);
+        return;
       }
+      PLACE[id] = 'pool';
+      toast(`已退课《${course.name}》-${course.credit} 学分`);
       lastMovedId = id;
       render();
     });
@@ -1273,10 +1306,7 @@ function setupDropZones(){
         return;
       }
       if (PLACE[id] === cat) return;
-      PLACE[id] = cat;
-      lastMovedId = id;
-      toast(`已选《${course.name}》+${course.credit} 学分`);
-      render();
+      selectCourse(course);
     });
   });
 
@@ -1457,6 +1487,8 @@ function setupModal(){
 
   /* 进入选课表的唯一入口：两个类别都达标才放行，否则改为弹出不足提示 */
   function tryOpenSchedule(){
+    const error = electiveLimitError();
+    if (error){ closeElecModal(); toast(error, true); return; }
     const st = compute();
     if (st.status === 'incomplete'){
       closeElecModal();
@@ -1633,12 +1665,13 @@ function setupSchedule(){
 }
 
 let toastTimer = null;
-function toast(msg){
+function toast(msg, isError=false){
   const t = $('toast');
   t.textContent = msg;
+  t.classList.toggle('error', isError);
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 1900);
+  toastTimer = setTimeout(() => t.classList.remove('show'), isError ? 4500 : 1900);
 }
 
 /* ================= ★ 前后端对接：把目标值写进页面上的固定文案 =================
@@ -1651,6 +1684,7 @@ function applyGoal(){
   $('title-major').textContent=m.title;
   $('title-pool').textContent='选课池';
   $('rule-pick-label').textContent='公共与专业选修课';
+  $('rule-elective-limit').textContent=`每学期最多选 ${MAX_ELECTIVES_PER_TERM} 门选修课，公共与专业选修合计，跨学期选修课在每个开设学期各占 1 门`;
   $('rule-targets').textContent=`目标：总学分 ${targetText(GOAL.total)}；选修合计 ${targetText(GOAL.elective)}；公共基础课 ${targetText(p.target)}；专业课 ${targetText(m.target)}（空白目标不参与达标判断）`;
   $('goal-total').textContent=targetText(GOAL.total);
   $('goal-public').textContent=targetText(p.target);
@@ -1864,6 +1898,13 @@ function setupEditors(){
       status.classList.add('error');status.textContent='请填写课程名称、正数学分（以 0.5 为步长），选择大类、性质及至少一个学期（1–6）。';return;
     }
     const c={id:'manual-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10),name,credit:r1(credit),cat,type,term:terms.join(','),attr:'手动添加',custom:true,poolAdded:toPool};
+    const error = toPool ? '' : electiveLimitError(c);
+    if (error){
+      status.classList.add('error');
+      status.textContent = error;
+      toast(error, true);
+      return;
+    }
     COURSES.push(c);PLACE[c.id]=toPool?'pool':cat;
     // Explicit pool additions remain visible even when a matching filter was enabled.
     if(toPool && type==='选修') FILTERS.forEach(f=>{
@@ -1889,6 +1930,10 @@ setupModal();
 setupSchedule();
 setupEditors();
 render();
+if (INJECTED?.offline){
+  const error = electiveLimitError();
+  if (error) toast(error, true);
+}
 
 /* 控制台自检（数据一致性） */
 (function selfCheck(){
